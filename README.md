@@ -1,12 +1,8 @@
-This repository contains a README file sample for Daytona Samples and the MIT License.
+# Sample React Coinbase Connect
 
-It can be used as a template to create sample repositories that can be added into [Daytona](https://github.com/daytonaio/daytona).
+A boilerplate for quickly setting up a project with React + Vite + TypeScript + shadcn/ui + CoinBase Wallet SDK. This template saves hours of efforts it would take for a developer to manually set all this up.
 
-Once you finish your sample and it gets merged, you can open a PR in the Daytona repo and submit the sample into the [index file](https://github.com/daytonaio/daytona/blob/main/hack/samples/index.json).
-
-# Sample <LANGUAGE/FRAMEWORK>
-
-Sample description
+![The easiest way to connect a React app with Coinbase Wallet (1)](https://github.com/user-attachments/assets/88ecbaec-2ff5-4ed9-b8c6-fd4ad4a41440)
 
 ---
 
@@ -17,18 +13,21 @@ Sample description
 1. **Install Daytona**: Follow the [Daytona installation guide](https://www.daytona.io/docs/installation/installation/).  
 2. **Create the Workspace**:  
    ```bash  
-   daytona create <SAMPLE_REPO_URL> 
+   daytona create https://github.com/daytonaio/sample-react-coinbase-connect 
    ```  
-
-... MORE STEPS IF NEEDED ...
-
-4. **Start the Application**:  
+3. **Start the Application**:  
    ```bash  
-   command to start the app
+   npm run dev
+   
+   # Building for Production
+   npm run build
+   npm run preview
    ```  
-
 ---
 
 ## ✨ Features  
 
-List of sample features (e.g. realtime chat app, standardized development environment with devcontainers)
+- [x] CoinBase Wallet integration
+- [x] Modern UI with shadcn/ui components
+- [x] Built with Vite for fast development
+- [x] Type-safe with TypeScript
