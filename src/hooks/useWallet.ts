@@ -4,10 +4,8 @@ import { ethers } from "ethers";
 
 const APP_NAME = "Daytona Quest";
 const APP_LOGO_URL = "";
-const DEFAULT_ETH_JSONRPC_URL =
-  "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161";
 
-export function useWallet() {
+export function useWallet(rpcUrl: string) {
   const [isConnected, setIsConnected] = useState(false);
   const [address, setAddress] = useState<string>("");
   const [coinbaseWallet, setCoinbaseWallet] =
@@ -26,8 +24,8 @@ export function useWallet() {
 
     try {
       const ethereum = coinbaseWallet.makeWeb3Provider({
-        rpcUrl: DEFAULT_ETH_JSONRPC_URL,
-        options: "all"
+        rpcUrl,
+        options: "all",
       });
 
       const accounts = (await ethereum.request({
@@ -44,14 +42,14 @@ export function useWallet() {
       setIsConnected(false);
       setAddress("");
     }
-  }, [coinbaseWallet]);
+  }, [coinbaseWallet, rpcUrl]);
 
   const disconnect = useCallback(async () => {
     try {
       if (coinbaseWallet) {
         const ethereum = coinbaseWallet.makeWeb3Provider({
-          rpcUrl: DEFAULT_ETH_JSONRPC_URL,
-          options: "all"
+          rpcUrl,
+          options: "all",
         });
         if (typeof (ethereum as any).close === "function") {
           await (ethereum as any).close();
@@ -62,7 +60,7 @@ export function useWallet() {
     } catch (error) {
       console.error("Failed to disconnect wallet:", error);
     }
-  }, [coinbaseWallet]);
+  }, [coinbaseWallet, rpcUrl]);
 
   return {
     connect,
