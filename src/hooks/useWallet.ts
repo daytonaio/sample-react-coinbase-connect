@@ -2,10 +2,12 @@ import { useState, useCallback, useEffect } from "react";
 import { CoinbaseWalletSDK } from "@coinbase/wallet-sdk";
 import { ethers } from "ethers";
 
-const APP_NAME = "Daytona Quest";
-const APP_LOGO_URL = "";
+interface WalletConfig {
+  appName: string;
+  appLogoUrl?: string;
+}
 
-export function useWallet(rpcUrl: string) {
+export function useWallet(rpcUrl: string, config: WalletConfig) {
   const [isConnected, setIsConnected] = useState(false);
   const [address, setAddress] = useState<string>("");
   const [coinbaseWallet, setCoinbaseWallet] =
@@ -13,11 +15,11 @@ export function useWallet(rpcUrl: string) {
 
   useEffect(() => {
     const wallet = new CoinbaseWalletSDK({
-      appName: APP_NAME,
-      appLogoUrl: APP_LOGO_URL,
+      appName: config.appName,
+      appLogoUrl: config.appLogoUrl,
     });
     setCoinbaseWallet(wallet);
-  }, []);
+  }, [config.appName, config.appLogoUrl]);
 
   const connect = useCallback(async () => {
     if (!coinbaseWallet) return;
