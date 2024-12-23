@@ -1,9 +1,6 @@
 import { useCallback, useState } from "react";
 import { CoinbaseWalletSDK } from "@coinbase/wallet-sdk";
 
-const APP_NAME = "CoinConnect";
-("https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161");
-
 const SUPPORTED_NETWORKS = {
   "1": { name: "Ethereum Mainnet", chainId: "0x1" },
   "5": { name: "Goerli Testnet", chainId: "0x5" },
@@ -20,7 +17,7 @@ interface CoinbaseWalletHook {
   supportedNetworks: typeof SUPPORTED_NETWORKS;
 }
 
-export function useCoinbaseWallet(): CoinbaseWalletHook {
+export function useCoinbaseWallet(appName: string): CoinbaseWalletHook {
   const [isConnected, setIsConnected] = useState(false);
   const [address, setAddress] = useState("");
   const [error, setError] = useState<Error | null>(null);
@@ -33,7 +30,7 @@ export function useCoinbaseWallet(): CoinbaseWalletHook {
       console.log("Initializing Coinbase Wallet SDK...");
 
       const coinbaseWallet = new CoinbaseWalletSDK({
-        appName: APP_NAME,
+        appName: appName,
         appLogoUrl: undefined,
       });
 
@@ -70,7 +67,7 @@ export function useCoinbaseWallet(): CoinbaseWalletHook {
       setIsConnected(false);
       setAddress("");
     }
-  }, []);
+  }, [appName]);
 
   const disconnect = useCallback(() => {
     setIsConnected(false);
@@ -84,7 +81,7 @@ export function useCoinbaseWallet(): CoinbaseWalletHook {
       if (!network) throw new Error("Unsupported network");
 
       const coinbaseWallet = new CoinbaseWalletSDK({
-        appName: APP_NAME,
+        appName: appName,
         appLogoUrl: undefined,
       });
 
