@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
-import { CoinbaseWalletSDK } from "@coinbase/wallet-sdk";
+import { createCoinbaseWalletSDK } from "@coinbase/wallet-sdk";
 import { ethers } from "ethers";
 
 interface WalletConfig {
@@ -7,14 +7,15 @@ interface WalletConfig {
   appLogoUrl?: string;
 }
 
-export function useWallet(rpcUrl: string, config: WalletConfig) {
+export function useWallet(config: WalletConfig) {
   const [isConnected, setIsConnected] = useState(false);
   const [address, setAddress] = useState<string>("");
-  const [coinbaseWallet, setCoinbaseWallet] =
-    useState<CoinbaseWalletSDK | null>(null);
+  const [coinbaseWallet, setCoinbaseWallet] = useState<ReturnType<
+    typeof createCoinbaseWalletSDK
+  > | null>(null);
 
   useEffect(() => {
-    const wallet = new CoinbaseWalletSDK({
+    const wallet = createCoinbaseWalletSDK({
       appName: config.appName,
       appLogoUrl: config.appLogoUrl,
     });
@@ -25,12 +26,9 @@ export function useWallet(rpcUrl: string, config: WalletConfig) {
     if (!coinbaseWallet) return;
 
     try {
-      const ethereum = coinbaseWallet.makeWeb3Provider({
-        rpcUrl,
-        options: "all",
-      });
+      const provider = coinbaseWallet.getProvider();
 
-      const accounts = (await ethereum.request({
+      const accounts = (await provider.request({
         method: "eth_requestAccounts",
       })) as string[];
 
@@ -44,17 +42,14 @@ export function useWallet(rpcUrl: string, config: WalletConfig) {
       setIsConnected(false);
       setAddress("");
     }
-  }, [coinbaseWallet, rpcUrl]);
+  }, [coinbaseWallet]);
 
   const disconnect = useCallback(async () => {
     try {
       if (coinbaseWallet) {
-        const ethereum = coinbaseWallet.makeWeb3Provider({
-          rpcUrl,
-          options: "all",
-        });
-        if (typeof (ethereum as any).close === "function") {
-          await (ethereum as any).close();
+        const provider = coinbaseWallet.getProvider();
+        if (typeof (provider as any).close === "function") {
+          await (provider as any).close();
         }
       }
       setAddress("");
@@ -62,7 +57,7 @@ export function useWallet(rpcUrl: string, config: WalletConfig) {
     } catch (error) {
       console.error("Failed to disconnect wallet:", error);
     }
-  }, [coinbaseWallet, rpcUrl]);
+  }, [coinbaseWallet]);
 
   return {
     connect,
